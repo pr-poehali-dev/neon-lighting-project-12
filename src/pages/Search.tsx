@@ -15,6 +15,7 @@ interface Profile {
   bio: string;
   interests: string[];
   createdAt: string;
+  photoUrl?: string;
 }
 
 export default function Search() {
@@ -123,9 +124,13 @@ export default function Search() {
                   className="bg-white/5 border border-white/10 p-5 cursor-pointer hover:bg-white/10 hover:border-white/20 transition-all duration-200 group"
                 >
                   <div className="flex items-start justify-between mb-3">
-                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-lg font-bold text-white/60">
-                      {p.name[0].toUpperCase()}
-                    </div>
+                    {p.photoUrl ? (
+                      <img src={p.photoUrl} alt={p.name} className="w-10 h-10 object-cover" />
+                    ) : (
+                      <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-lg font-bold text-white/60">
+                        {p.name[0].toUpperCase()}
+                      </div>
+                    )}
                     <span className="text-white/30 text-xs uppercase tracking-wide">{p.city}</span>
                   </div>
                   <h3 className="text-white font-semibold text-base mb-0.5">
@@ -177,9 +182,13 @@ export default function Search() {
             >
               <div className="flex items-start justify-between mb-6">
                 <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center text-2xl font-bold text-white/50">
-                    {selected.name[0].toUpperCase()}
-                  </div>
+                  {selected.photoUrl ? (
+                    <img src={selected.photoUrl} alt={selected.name} className="w-14 h-14 object-cover" />
+                  ) : (
+                    <div className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center text-2xl font-bold text-white/50">
+                      {selected.name[0].toUpperCase()}
+                    </div>
+                  )}
                   <div>
                     <h2 className="text-xl font-bold text-white">{selected.name}, {selected.age}</h2>
                     <p className="text-white/40 text-sm">{selected.city} · {selected.gender}</p>

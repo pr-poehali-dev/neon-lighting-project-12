@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Icon from "@/components/ui/icon";
 import { useAuth } from "@/hooks/useAuth";
+import PhotoUpload from "@/components/PhotoUpload";
 
 const API_URL = "https://functions.poehali.dev/77d88eb3-0fde-4a35-9125-70a743929c55";
 
@@ -23,6 +24,7 @@ export default function ProfileForm({ onClose }: ProfileFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [photoUrl, setPhotoUrl] = useState("");
   const [form, setForm] = useState({
     name: "",
     age: "",
@@ -143,6 +145,15 @@ export default function ProfileForm({ onClose }: ProfileFormProps) {
                   transition={{ duration: 0.2 }}
                   className="flex flex-col gap-4"
                 >
+                  {getToken() && (
+                    <div className="flex justify-center py-2">
+                      <PhotoUpload
+                        token={getToken()}
+                        currentPhoto={photoUrl}
+                        onUploaded={(url) => setPhotoUrl(url)}
+                      />
+                    </div>
+                  )}
                   <div className="flex flex-col gap-1">
                     <label className="text-xs uppercase tracking-wide text-neutral-500">Имя</label>
                     <input

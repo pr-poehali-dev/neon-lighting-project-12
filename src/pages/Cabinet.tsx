@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import ProfileForm from "@/components/ProfileForm";
+import PhotoUpload from "@/components/PhotoUpload";
 import Icon from "@/components/ui/icon";
 import { motion } from "framer-motion";
 
 export default function Cabinet() {
-  const { user, loading, logout } = useAuth();
+  const { user, loading, logout, getToken } = useAuth();
   const [formOpen, setFormOpen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
 
@@ -64,6 +65,15 @@ export default function Cabinet() {
                     <Icon name="Pencil" size={12} />
                     Редактировать
                   </button>
+                </div>
+
+                {/* Photo */}
+                <div className="flex justify-center py-2">
+                  <PhotoUpload
+                    token={getToken()}
+                    currentPhoto={profile.photoUrl}
+                    onUploaded={() => window.location.reload()}
+                  />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">

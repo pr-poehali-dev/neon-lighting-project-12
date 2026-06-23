@@ -78,7 +78,7 @@ def handler(event: dict, context) -> dict:
         if action == "me":
             token = body.get("token", "")
             cur.execute("""
-                SELECT u.id, u.email, p.id, p.name, p.age, p.city, p.gender, p.looking_for, p.bio, p.interests
+                SELECT u.id, u.email, p.id, p.name, p.age, p.city, p.gender, p.looking_for, p.bio, p.interests, p.photo_url
                 FROM sessions s
                 JOIN users u ON u.id = s.user_id
                 LEFT JOIN profiles p ON p.user_id = u.id
@@ -92,7 +92,8 @@ def handler(event: dict, context) -> dict:
             if row[2]:
                 result["profile"] = {
                     "id": row[2], "name": row[3], "age": row[4], "city": row[5],
-                    "gender": row[6], "lookingFor": row[7], "bio": row[8], "interests": row[9]
+                    "gender": row[6], "lookingFor": row[7], "bio": row[8], "interests": row[9],
+                    "photoUrl": row[10]
                 }
             return {"statusCode": 200, "headers": CORS, "body": json.dumps(result)}
 

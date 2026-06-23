@@ -45,13 +45,21 @@ def handler(event: dict, context) -> dict:
                 user_id = row[0]
                 cur.execute("DELETE FROM profiles WHERE user_id = %s", (user_id,))
 
+        # Сохраняем photo_url если была у предыдущей анкеты
+        old_photo = None
+        if user_id:
+            cur.execute("SELECT photo_url FROM profiles WHERE user_id = %s LIMIT 1", (user_id,))
+            old_row = cur.fetchone()
+            if old_row:
+                old_photo = old_row[0]
+
         cur.execute(
             """
-            INSERT INTO profiles (name, age, city, gender, looking_for, bio, interests, user_id)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO profiles (name, age, city, gender, looking_for, bio, interests, user_id, photo_url)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
             RETURNING id
             """,
-            (name, age, city, gender, looking_for, bio, interests, user_id),
+            (name, age, city, gender, looking_for, bio, interests, user_id, old_photo),
         )
         profile_id = cur.fetchone()[0]
         conn.commit()
@@ -87,7 +95,7 @@ def handler(event: dict, context) -> dict:
         where = " AND ".join(filters)
         cur.execute(
             f"""
-            SELECT id, name, age, city, gender, looking_for, bio, interests, created_at
+            SELECT id, name, age, city, gender, looking_for, bio, interests, created_at, photo_url
             FROM profiles
             WHERE {where}
             ORDER BY created_at DESC
@@ -110,6 +118,7 @@ def handler(event: dict, context) -> dict:
                 "bio": r[6],
                 "interests": r[7],
                 "createdAt": r[8].isoformat(),
+                "photoUrl": r[9],
             }
             for r in rows
         ]

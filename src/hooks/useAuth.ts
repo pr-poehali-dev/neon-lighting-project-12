@@ -11,6 +11,7 @@ export interface UserProfile {
   lookingFor: string;
   bio: string;
   interests: string[];
+  photoUrl?: string;
 }
 
 export interface AuthUser {
