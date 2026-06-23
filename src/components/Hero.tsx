@@ -1,7 +1,11 @@
 import { useScroll, useTransform, motion } from "framer-motion";
 import { useRef } from "react";
 
-export default function Hero() {
+interface HeroProps {
+  onOpenForm: () => void;
+}
+
+export default function Hero({ onOpenForm }: HeroProps) {
   const container = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: container,
@@ -32,7 +36,10 @@ export default function Hero() {
         <p className="text-lg md:text-xl max-w-2xl mx-auto opacity-90 mb-8">
           Заполни анкету и знакомься с людьми, которые тебе по-настоящему близки
         </p>
-        <button className="bg-white text-black px-8 py-3 text-sm uppercase tracking-wide transition-all duration-300 hover:bg-white/80 cursor-pointer">
+        <button
+          onClick={onOpenForm}
+          className="bg-white text-black px-8 py-3 text-sm uppercase tracking-wide transition-all duration-300 hover:bg-white/80 cursor-pointer"
+        >
           Создать анкету
         </button>
       </div>
