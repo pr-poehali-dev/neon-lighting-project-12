@@ -1,0 +1,16 @@
+{
+  "tests": [
+    {
+      "name": "OPTIONS preflight",
+      "method": "OPTIONS",
+      "path": "/",
+      "expectedStatus": 200
+    },
+    {
+      "name": "GET without token returns 401",
+      "method": "GET",
+      "path": "/?mode=received&token=invalid",
+      "expectedStatus": 401
+    }
+  ]
+}
