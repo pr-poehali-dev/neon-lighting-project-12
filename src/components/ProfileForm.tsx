@@ -2,6 +2,8 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Icon from "@/components/ui/icon";
 
+const API_URL = "https://functions.poehali.dev/77d88eb3-0fde-4a35-9125-70a743929c55";
+
 interface ProfileFormProps {
   onClose: () => void;
 }
@@ -16,6 +18,9 @@ const STEPS = ["Основное", "О себе", "Интересы"];
 
 export default function ProfileForm({ onClose }: ProfileFormProps) {
   const [step, setStep] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
   const [form, setForm] = useState({
     name: "",
     age: "",
@@ -46,8 +51,24 @@ export default function ProfileForm({ onClose }: ProfileFormProps) {
     return form.interests.length >= 1;
   };
 
-  const handleSubmit = () => {
-    onClose();
+  const handleSubmit = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, age: parseInt(form.age) }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Ошибка сервера");
+      setSuccess(true);
+      setTimeout(() => onClose(), 2000);
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Что-то пошло не так");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -97,8 +118,19 @@ export default function ProfileForm({ onClose }: ProfileFormProps) {
             </div>
           </div>
 
+          {/* Success screen */}
+          {success && (
+            <div className="px-8 pb-12 pt-4 flex flex-col items-center gap-4 text-center">
+              <div className="w-14 h-14 rounded-full bg-neutral-900 flex items-center justify-center">
+                <Icon name="Check" size={28} className="text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-neutral-900">Анкета создана!</h3>
+              <p className="text-sm text-neutral-500">Теперь тебя могут найти другие пользователи</p>
+            </div>
+          )}
+
           {/* Steps */}
-          <div className="px-8 pb-8">
+          <div className={`px-8 pb-8 ${success ? "hidden" : ""}`}>
             <AnimatePresence mode="wait">
               {step === 0 && (
                 <motion.div
@@ -237,6 +269,10 @@ export default function ProfileForm({ onClose }: ProfileFormProps) {
               )}
             </AnimatePresence>
 
+            {error && (
+              <p className="mt-4 text-sm text-red-500 text-center">{error}</p>
+            )}
+
             {/* Navigation */}
             <div className="flex gap-3 mt-8">
               {step > 0 && (
@@ -262,14 +298,14 @@ export default function ProfileForm({ onClose }: ProfileFormProps) {
               ) : (
                 <button
                   onClick={handleSubmit}
-                  disabled={!canNext()}
+                  disabled={!canNext() || loading}
                   className={`flex-1 py-3 text-sm uppercase tracking-wide transition-all duration-200 ${
-                    canNext()
+                    canNext() && !loading
                       ? "bg-neutral-900 text-white hover:bg-neutral-700"
                       : "bg-neutral-100 text-neutral-300 cursor-not-allowed"
                   }`}
                 >
-                  Создать анкету
+                  {loading ? "Сохраняем..." : "Создать анкету"}
                 </button>
               )}
             </div>

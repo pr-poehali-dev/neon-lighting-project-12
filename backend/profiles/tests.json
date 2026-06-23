@@ -1,0 +1,25 @@
+{
+  "tests": [
+    {
+      "name": "GET profiles list",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200
+    },
+    {
+      "name": "POST create profile",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "name": "Алексей",
+        "age": 25,
+        "city": "Москва",
+        "gender": "Мужчина",
+        "lookingFor": "Девушку",
+        "bio": "Люблю путешествия и хороший кофе",
+        "interests": ["Путешествия", "Кофе"]
+      },
+      "expectedStatus": 201
+    }
+  ]
+}
