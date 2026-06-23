@@ -1,0 +1,18 @@
+{
+  "tests": [
+    {
+      "name": "Register user",
+      "method": "POST",
+      "path": "/",
+      "body": { "action": "register", "email": "test@vibe.ru", "password": "secret123" },
+      "expectedStatus": 201
+    },
+    {
+      "name": "Login user",
+      "method": "POST",
+      "path": "/",
+      "body": { "action": "login", "email": "test@vibe.ru", "password": "secret123" },
+      "expectedStatus": 200
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Icon from "@/components/ui/icon";
+import { useAuth } from "@/hooks/useAuth";
 
 const API_URL = "https://functions.poehali.dev/77d88eb3-0fde-4a35-9125-70a743929c55";
 
@@ -17,6 +18,7 @@ const INTERESTS = [
 const STEPS = ["Основное", "О себе", "Интересы"];
 
 export default function ProfileForm({ onClose }: ProfileFormProps) {
+  const { getToken } = useAuth();
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -58,7 +60,7 @@ export default function ProfileForm({ onClose }: ProfileFormProps) {
       const res = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, age: parseInt(form.age) }),
+        body: JSON.stringify({ ...form, age: parseInt(form.age), token: getToken() }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Ошибка сервера");

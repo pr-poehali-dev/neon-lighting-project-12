@@ -22,6 +22,7 @@ def handler(event: dict, context) -> dict:
 
     if method == "POST":
         body = json.loads(event.get("body") or "{}")
+        token = body.get("token", "")
         name = body.get("name", "").strip()
         age = int(body.get("age", 0))
         city = body.get("city", "").strip()
@@ -31,21 +32,26 @@ def handler(event: dict, context) -> dict:
         interests = body.get("interests", [])
 
         if not all([name, age, city, gender, looking_for, bio]):
-            return {
-                "statusCode": 400,
-                "headers": cors,
-                "body": json.dumps({"error": "Заполни все поля"}),
-            }
+            return {"statusCode": 400, "headers": cors, "body": json.dumps({"error": "Заполни все поля"})}
 
         conn = get_conn()
         cur = conn.cursor()
+
+        user_id = None
+        if token:
+            cur.execute("SELECT user_id FROM sessions WHERE token = %s", (token,))
+            row = cur.fetchone()
+            if row:
+                user_id = row[0]
+                cur.execute("DELETE FROM profiles WHERE user_id = %s", (user_id,))
+
         cur.execute(
             """
-            INSERT INTO profiles (name, age, city, gender, looking_for, bio, interests)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO profiles (name, age, city, gender, looking_for, bio, interests, user_id)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
             RETURNING id
             """,
-            (name, age, city, gender, looking_for, bio, interests),
+            (name, age, city, gender, looking_for, bio, interests, user_id),
         )
         profile_id = cur.fetchone()[0]
         conn.commit()
