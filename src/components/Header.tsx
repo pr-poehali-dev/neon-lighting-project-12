@@ -9,16 +9,10 @@ export default function Header({ className }: HeaderProps) {
         <div className="text-white text-sm uppercase tracking-wide">vibe</div>
         <nav className="flex gap-8">
           <a
-            href="#about"
+            href="/search"
             className="text-white hover:text-neutral-400 transition-colors duration-300 uppercase text-sm"
           >
-            Как это работает
-          </a>
-          <a
-            href="#contact"
-            className="text-white hover:text-neutral-400 transition-colors duration-300 uppercase text-sm"
-          >
-            Войти
+            Найти людей
           </a>
         </nav>
       </div>

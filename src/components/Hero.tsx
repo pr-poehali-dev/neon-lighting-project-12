@@ -36,12 +36,20 @@ export default function Hero({ onOpenForm }: HeroProps) {
         <p className="text-lg md:text-xl max-w-2xl mx-auto opacity-90 mb-8">
           Заполни анкету и знакомься с людьми, которые тебе по-настоящему близки
         </p>
-        <button
-          onClick={onOpenForm}
-          className="bg-white text-black px-8 py-3 text-sm uppercase tracking-wide transition-all duration-300 hover:bg-white/80 cursor-pointer"
-        >
-          Создать анкету
-        </button>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <button
+            onClick={onOpenForm}
+            className="bg-white text-black px-8 py-3 text-sm uppercase tracking-wide transition-all duration-300 hover:bg-white/80 cursor-pointer"
+          >
+            Создать анкету
+          </button>
+          <a
+            href="/search"
+            className="border border-white text-white px-8 py-3 text-sm uppercase tracking-wide transition-all duration-300 hover:bg-white/10 cursor-pointer text-center"
+          >
+            Найти людей
+          </a>
+        </div>
       </div>
     </div>
   );
